@@ -1,6 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import Api from '../Api';
 
 function Header() {
+  const {token, logout, getToken} = Api();
+  const logoutUser = () => {
+    if(token != undefined){
+        logout();
+    }
+  }
   return (
     <div>
         <div className="navbar-top navbar-dark d-xl-block py-2 mx-2 mx-md-4 rounded-bottom-4">
@@ -41,11 +49,11 @@ function Header() {
                         <a className="nav-link" href="https://www.tutorialspoint.com/market/teach_with_us.jsp" target="_self"  data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Teach with us"><i className="fal fa-users-class me-2"></i> <span>Teach with us</span></a>
                         </div>
                         <ul className="list-unstyled d-flex mb-0 top-nav-social">
-                            <li><a className="px-2 nav-link" rel="nofollow" href="https://www.facebook.com/tutorialspointindia" target="_blank" rel="noreferrer"  data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Facebook"><i className="fab fa-facebook"></i></a> </li>
-                            <li><a className="px-2 nav-link" rel="nofollow" href="https://www.instagram.com/tutorialspoint_/" target="_blank" rel="noreferrer" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Instagram"><i className="fab fa-instagram"></i></a> </li>
-                            <li><a className="px-2 nav-link" rel="nofollow" href="https://twitter.com/tutorialspoint" target="_blank" rel="noreferrer" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Twitter"><i className="fab fa-twitter"></i></a> </li>
-                            <li><a className="px-2 nav-link" rel="nofollow" href="https://www.youtube.com/channel/UCVLbzhxVTiTLiVKeGV7WEBg" target="_blank" rel="noreferrer" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Youtube"><i className="fab fa-youtube"></i></a> </li>
-                            <li><a className="px-2 nav-link" rel="nofollow" href="https://www.linkedin.com/authwall?trk=bf&trkInfo=AQEkqX2eckF__gAAAX-wMwEYvrsjBVbEtWQd4pgEdVSzkL22Nik1KEpY_ECWLKDGc41z8IOZWr2Bb0fvJplT60NPBtSw87J6QCpc7wD4qQ3iU13n6xJtBxME5o05Wmpg5JPm5YY=&originalReferer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fcompany%2Ftutorialspoint" target="_blank" rel="noreferrer" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint LinkedIn"><i className="fab fa-linkedin-in"></i></a> </li>
+                            <li><a className="px-2 nav-link" rel="noreferrer" href="https://www.facebook.com/tutorialspointindia" target="_blank" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Facebook"><i className="fab fa-facebook"></i></a> </li>
+                            <li><a className="px-2 nav-link" rel="noreferrer" href="https://www.instagram.com/tutorialspoint_/" target="_blank" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Instagram"><i className="fab fa-instagram"></i></a> </li>
+                            <li><a className="px-2 nav-link" rel="noreferrer" href="https://twitter.com/tutorialspoint" target="_blank" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Twitter"><i className="fab fa-twitter"></i></a> </li>
+                            <li><a className="px-2 nav-link" rel="noreferrer" href="https://www.youtube.com/channel/UCVLbzhxVTiTLiVKeGV7WEBg" target="_blank" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint Youtube"><i className="fab fa-youtube"></i></a> </li>
+                            <li><a className="px-2 nav-link" rel="noreferrer" href="https://www.linkedin.com/authwall?trk=bf&trkInfo=AQEkqX2eckF__gAAAX-wMwEYvrsjBVbEtWQd4pgEdVSzkL22Nik1KEpY_ECWLKDGc41z8IOZWr2Bb0fvJplT60NPBtSw87J6QCpc7wD4qQ3iU13n6xJtBxME5o05Wmpg5JPm5YY=&originalReferer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fcompany%2Ftutorialspoint" target="_blank" data-bs-toggle="tooltip" data-bs-animation="false" data-bs-placement="bottom" data-bs-original-title="Tutorialspoint LinkedIn"><i className="fab fa-linkedin-in"></i></a> </li>
                         </ul>
                     </div>
                 </div>
@@ -146,9 +154,14 @@ function Header() {
                             </li>
                         </ul>
                     </div>
-                    <div className="navbar-nav d-lg-inline-block nav-login">
-                    <a href="https://www.tutorialspoint.com/market/login.asp" className="btn btn-grey-border mb-0"><i className="fal fa-sign-in-alt me-2"></i>Login</a>
-                    </div>
+                    {!getToken()
+                        ?<div className="navbar-nav d-lg-inline-block nav-login">
+                            <Link to="/login" className="btn btn-grey-border mb-0"><i className="fal fa-sign-in-alt me-2"></i>Login</Link>
+                        </div>     
+                        : <div className="navbar-nav d-lg-inline-block nav-login">
+                          <Link to="/logout" onClick={logoutUser} className="btn btn-grey-border mb-0"><i className="fal fa-sign-in-alt me-2"></i>Logout</Link>
+                        </div>             
+                    }
                 </div>
             </nav>
         </header>
