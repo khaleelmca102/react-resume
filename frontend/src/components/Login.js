@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Api from '../Api';
-
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const {http, setToken} = Api();
+  const navigate = useNavigate();
+  const {http, setToken, getToken} = Api();
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
+
+  useEffect(()=>{
+    if(getToken()){
+      navigate('/');
+    }
+  },[])
 
   const sumbitForm = () => {
     http.post('/login',{email_id:email,password:password}).then((res)=>{

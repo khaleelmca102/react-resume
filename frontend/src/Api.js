@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const Api = () => {
     setToken(token); 
     setUser(user);
 
-    navigate('/dashboard');
+    navigate('/');
   }
 
   const logout = () => {
@@ -35,8 +35,12 @@ const Api = () => {
     navigate('/login');
   }
 
+  const loggedin = () => {
+    navigate('/');
+  }  
+
   const http = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
+    baseURL: "http://localhost:8888/api",
     headers:{
         "content-type" : "application/json" 
     }
@@ -48,7 +52,8 @@ const Api = () => {
     user,
     getToken,
     http,
-    logout
+    logout,
+    loggedin
   }
 }
 

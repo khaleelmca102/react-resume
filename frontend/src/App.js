@@ -9,7 +9,7 @@ import './css/article.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import Container from './components/Container';
+import Home from './components/Home';
 
 
 function App() {
@@ -18,8 +18,9 @@ function App() {
         <Header />
         <div>
           <Routes>
+            <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />
-            <Route path='/dashboard' element={<Container />} />
+            <Route path='/logout' element={<Login />} />
           </Routes>
         </div>
         <Footer />

@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+
+.accordion-button {
+  font-size: 18px;
+  border: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #212529;
+}
