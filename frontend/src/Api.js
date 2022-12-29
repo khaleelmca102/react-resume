@@ -40,7 +40,7 @@ const Api = () => {
   }  
 
   const http = axios.create({
-    baseURL: "http://localhost:8888/api",
+    baseURL: "http://localhost:8000/api",
     headers:{
         "content-type" : "application/json" 
     }
