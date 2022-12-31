@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ResumeBasicInfo;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreResumeBasicInfoRequest;
 use App\Http\Requests\UpdateResumeBasicInfoRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class ResumeBasicInfoController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
 
     /**
@@ -22,7 +28,7 @@ class ResumeBasicInfoController extends Controller
     public function index(Request $request)
     {
         $user = ResumeBasicInfo::where('user_id', $request->user_id)
-            ->select('full_name', 'phone_number')
+            ->select('*')
             ->first();
 
         return $user;
@@ -81,12 +87,33 @@ class ResumeBasicInfoController extends Controller
     public function update(Request $request)
     {        
         $user = ResumeBasicInfo::where('user_id',$request->user_id)->first();
-        
-        $user->update([
-            'full_name'=>$request->full_name,
-            'phone_number'=>$request->phone_number
-        ]);
-
+        $current_date_time = Carbon::now()->toDateTimeString(); 
+        if ($user === null) {
+            ResumeBasicInfo::create([
+                'user_id'=>$request->user_id,
+                'full_name'=>$request->full_name,
+                'phone_number'=>$request->phone_number,
+                'email_id'=>$request->email_id,
+                'state'=>$request->state,
+                'profile_title'=>$request->profile_title,
+                'city'=>$request->city,
+                'zipcode'=>$request->zipcode,
+                'profile_description'=>$request->profile_description,
+                'created_dtm'=>$current_date_time
+            ]);
+        } else {
+            $user->update([
+                'full_name'=>$request->full_name,
+                'phone_number'=>$request->phone_number,
+                'email_id'=>$request->email_id,
+                'state'=>$request->state,
+                'profile_title'=>$request->profile_title,
+                'city'=>$request->city,
+                'zipcode'=>$request->zipcode,
+                'profile_description'=>$request->profile_description,
+                'updated_dtm'=>$current_date_time
+            ]);
+        }
         return response()->json('Success');
     }
 

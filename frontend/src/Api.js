@@ -6,14 +6,20 @@ const Api = () => {
   const navigate = useNavigate();
   
   const getToken = () => {
-    const tokenString = sessionStorage.getItem('token');
-    const userToken = JSON.parse(tokenString);
+    var userToken = '';
+    if (sessionStorage.getItem("token") !== null) {
+      const tokenString = sessionStorage.getItem('token');
+      userToken = JSON.parse(tokenString);
+    }
     return userToken;
   }
 
   const getUser = () => {
-    const userString = sessionStorage.getItem('user');
-    const user_detail = JSON.parse(userString);
+    var user_detail = '';
+    if (sessionStorage.getItem("token") !== null) {
+      const userString = sessionStorage.getItem('user');
+      user_detail = JSON.parse(userString);
+    }
     return user_detail;
   }
   
@@ -42,7 +48,8 @@ const Api = () => {
   const http = axios.create({
     baseURL: "http://localhost:8000/api",
     headers:{
-        "content-type" : "application/json" 
+        "content-type" : "application/json",
+        "Authorization" : `Bearer ${token}`
     }
   });
 

@@ -15,5 +15,13 @@ class ResumeBasicInfo extends Model
         'user_id',
         'full_name',
         'phone_number',
+        'email_id',
+        'profile_title',
+        'state',
+        'city',
+        'zipcode',
+        'profile_description',
+        'created_dtm',
+        'updated_dtm'
     ];
 }
