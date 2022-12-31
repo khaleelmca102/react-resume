@@ -16,36 +16,65 @@ import Resume from './Resume';
 function Home() {
   const navigate = useNavigate();
   const {getToken} = Api();
+  const[currentNav, setCurrentNav] = useState('');  
+  const [basicSuccess, setBasicSuccess] = useState('');
+  const [templateSuccess, setTemplateSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if(!getToken()){
       navigate('/login');
     }    
-  },[]); 
+  });  
+  useEffect(() => {      
+    showLoader();
+  },[]);  
 
-  const getCurrentNav = (currentNav) => {
-    return currentNav;
-  }  
-  const[currentNav, setCurrentNav] = useState('');
- 
+  const showLoader = (param) => {
+    setLoading(param);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }
+   
   const selectMenu = (currentNav) => {
     setCurrentNav(currentNav);
+    showLoader(true);
   }  
+
+  const basicToHome = (childdata) => {
+    setBasicSuccess(childdata);
+    if(basicSuccess){
+      setCurrentNav('yourresume');      
+    }
+  }
+
+  const templateToHome = (childdata) => {
+    setTemplateSuccess(childdata);
+    // if(templateSuccess){
+    //   setCurrentNav('basicinfo');
+    // }
+  }
   
-  const renderNavigation = (param) => {
+  const renderNavigation = (param) => {    
     switch(param) {
       case 'basicinfo':
-        return <Basicinfo />
+        return <Basicinfo basicToHome={basicToHome} showLoader={showLoader}/>
       case 'yourresume':
         return <Resume />
       default:
-        return <Template />
+        return <Template templateToHome={templateToHome}/>
     }
   }
 
   return (
-    <div>
+    <div>      
       <Container>
+      {loading ? (
+        <div className="loader-container">
+          <div className="spinner"></div>
+        </div>
+      ) : (
         <Row>
           <Col md={3} sm={3}>
             <Accordion defaultActiveKey={['0']} alwaysOpen>
@@ -66,7 +95,8 @@ function Home() {
               renderNavigation(currentNav)
             }
           </Col>
-        </Row>        
+        </Row>   
+      )}     
       </Container>
     </div>
   )

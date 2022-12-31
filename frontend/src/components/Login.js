@@ -12,7 +12,7 @@ function Login() {
     if(getToken()){
       navigate('/');
     }
-  },[])
+  },[getToken, navigate])
 
   const sumbitForm = () => {
     http.post('/login',{email_id:email,password:password}).then((res)=>{
