@@ -5,7 +5,7 @@ import Api from '../Api';
 function Header() {
   const {token, logout, getToken} = Api();
   const logoutUser = () => {
-    if(token !== undefined){
+    if(token !== undefined || token === ''){
         logout();
     }
   }

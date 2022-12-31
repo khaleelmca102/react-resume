@@ -11,25 +11,37 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Template from './Template';
 import Basicinfo from './Basicinfo';
+import Resume from './Resume';
 
 function Home() {
   const navigate = useNavigate();
   const {getToken} = Api();
 
-  const getCurrentNav = (currentNav) => {
-    return currentNav;
-  }  
-  const[currentNav, setCurrentNav] = useState(getCurrentNav());
- 
-  const selectMenu = (currentNav) => {
-    setCurrentNav(currentNav);
-  }  
   useEffect(() => {
     if(!getToken()){
       navigate('/login');
     }    
   },[]); 
 
+  const getCurrentNav = (currentNav) => {
+    return currentNav;
+  }  
+  const[currentNav, setCurrentNav] = useState('');
+ 
+  const selectMenu = (currentNav) => {
+    setCurrentNav(currentNav);
+  }  
+  
+  const renderNavigation = (param) => {
+    switch(param) {
+      case 'basicinfo':
+        return <Basicinfo />
+      case 'yourresume':
+        return <Resume />
+      default:
+        return <Template />
+    }
+  }
 
   return (
     <div>
@@ -43,6 +55,7 @@ function Home() {
                   <Nav defaultActiveKey="/" className="flex-column"  onSelect={selectMenu}>
                       <Nav.Link eventKey="template" title="Choose Templae">Choose Template</Nav.Link>
                       <Nav.Link eventKey="basicinfo" title="Basic Info">Basic Info</Nav.Link>
+                      <Nav.Link eventKey="yourresume" title="Your Resume">Your Resume</Nav.Link>
                   </Nav>
                   </Accordion.Body>
               </Accordion.Item>
@@ -50,9 +63,7 @@ function Home() {
           </Col>
           <Col md={8} sm={8}>
             {
-              currentNav === 'template'
-              ? <Template /> 
-              : <Basicinfo />
+              renderNavigation(currentNav)
             }
           </Col>
         </Row>        
