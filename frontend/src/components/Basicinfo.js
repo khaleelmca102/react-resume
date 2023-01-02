@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
+import axios from 'axios';
 import Api from '../Api'; 
 
 //const Basicinfo = () => {
 function Basicinfo({basicToHome, showLoader}) {
-  const {http, user, token} = Api();
+  const {http, user, token, logout} = Api();
   const inputRef = useRef([]);
   const errRef = useRef();  
 
@@ -25,20 +26,11 @@ function Basicinfo({basicToHome, showLoader}) {
   const [basicSuccess, setBasicSuccess] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    inputRef.current['fullname'].focus();
-    inputRef.current['phonenumber'].value = inputs.phonenumber;
-    inputRef.current['fullname'].value = inputs.fullname;
-    inputRef.current['emailid'].value = inputs.emailid;
-    inputRef.current['profiletitle'].value = inputs.profiletitle;
-    inputRef.current['state'].value = inputs.state;
-    inputRef.current['city'].value = inputs.city;
-    inputRef.current['zipcode'].value = inputs.zipcode;
-    inputRef.current['profiledescription'].value = inputs.profiledescription;
+  useEffect(() => {   
     fetchData(); 
     showLoader(false);
   },[]);
-  
+
   const fetchData = () => {  
     showLoader(true);
     http.get('/basicinfo/',{params:{user_id: inputs.user_id}}).then((res)=>{     
@@ -53,6 +45,19 @@ function Basicinfo({basicToHome, showLoader}) {
         zipcode:res.data.zipcode,
         profiledescription:res.data.profile_description,
       });
+      inputRef.current['fullname'].focus();
+      // inputRef.current['phonenumber'].value = inputs.phonenumber;
+      // inputRef.current['fullname'].value = inputs.fullname;
+      // inputRef.current['emailid'].value = inputs.emailid;
+      // inputRef.current['profiletitle'].value = inputs.profiletitle;
+      // inputRef.current['state'].value = inputs.state;
+      // inputRef.current['city'].value = inputs.city;
+      // inputRef.current['zipcode'].value = inputs.zipcode;
+      // inputRef.current['profiledescription'].value = inputs.profiledescription;
+    }).catch(error => {
+      if(error.response.status){
+        logout();
+      }
     });
   }
 
@@ -61,7 +66,8 @@ function Basicinfo({basicToHome, showLoader}) {
     //setSuccess(true);
   }
 
-  const saveBasicInfo = () => {
+  const saveBasicInfo = () => {    
+    showLoader(true);
     http.post('/basicinfo',
       { 
         user_id:inputs.user_id,
@@ -74,9 +80,14 @@ function Basicinfo({basicToHome, showLoader}) {
         zipcode:inputs.zipcode,
         profile_description:inputs.profiledescription,
       }).then((res)=>{
-        setBasicSuccess(true);
+       // setBasicSuccess(true);
         basicToHome(true);
-    }); 
+        showLoader(false);
+      }).catch(error => {
+        if(error.response.status){
+          logout();
+        }
+      }); 
   }
 
   const handleInputChange = (e) => {

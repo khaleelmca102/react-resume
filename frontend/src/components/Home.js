@@ -27,7 +27,7 @@ function Home() {
     }    
   });  
   useEffect(() => {      
-    showLoader();
+    showLoader(true);
   },[]);  
 
   const showLoader = (param) => {
@@ -51,9 +51,10 @@ function Home() {
 
   const templateToHome = (childdata) => {
     setTemplateSuccess(childdata);
-    // if(templateSuccess){
-    //   setCurrentNav('basicinfo');
-    // }
+    if(templateSuccess){
+      showLoader(true);
+      setCurrentNav('basicinfo');
+    }
   }
   
   const renderNavigation = (param) => {    
