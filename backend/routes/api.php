@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ResumeBasicInfoController;
+use App\Http\Controllers\ResumePDF;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class,"login"]);
+Route::get('resume', [ResumePDF::class,"index"]);
 
 Route::group([
     'middleware' => 'api'

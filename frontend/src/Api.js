@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,28 +7,28 @@ const Api = () => {
   
   const getToken = () => {
     var userToken = '';
-    if (sessionStorage.getItem("token") !== null) {
-      const tokenString = sessionStorage.getItem('token');
+    if (localStorage.getItem("token") !== null) {
+      const tokenString = localStorage.getItem('token');
       userToken = JSON.parse(tokenString);
     }
     return userToken;
   }
+
   const getUser = () => {
     var user_detail = '';
-    if (sessionStorage.getItem("token") !== null) {
-      const userString = sessionStorage.getItem('user');
+    if (localStorage.getItem("token") !== null) {
+      const userString = localStorage.getItem('user');
       user_detail = JSON.parse(userString);
     }
     return user_detail;
   }
-
+  
   const [token, setToken] = useState(getToken());
   const [user, setUser] = useState(getUser());
-  
-  
+
   const saveToken  = (user,token) =>{
-    sessionStorage.setItem('token',JSON.stringify(token));
-    sessionStorage.setItem('user',JSON.stringify(user));
+    localStorage.setItem('token',JSON.stringify(token));
+    localStorage.setItem('user',JSON.stringify(user));
 
     setToken(token); 
     setUser(user);
@@ -37,7 +37,7 @@ const Api = () => {
   }
 
   const logout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate('/login');
   }
 

@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 
-function Template({templateToHome}) {
-
+const Template = (props) => {
   //const [templateSuccess, setTemplateSuccess] = useState('');
 
   const saveTemplate = () => {
-    templateToHome(true);
+    props.setCurrentNav('basicinfo');
   }
 
   return (

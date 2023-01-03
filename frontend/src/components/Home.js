@@ -1,11 +1,9 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Accordion from 'react-bootstrap/Accordion';
 import Nav from 'react-bootstrap/Nav';
 import '../App.css';
-import Api from '../Api';
-import { useNavigate } from 'react-router-dom';
-//import Leftmenu from './Leftmenu';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,69 +11,44 @@ import Template from './Template';
 import Basicinfo from './Basicinfo';
 import Resume from './Resume';
 
+import { apiToken } from '../App';
+
 function Home() {
   const navigate = useNavigate();
-  const {getToken} = Api();
-  const[currentNav, setCurrentNav] = useState('');  
-  const [basicSuccess, setBasicSuccess] = useState('');
-  const [templateSuccess, setTemplateSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [currentNav, setCurrentNav] = useState('');
+  const [appToken, setAppToken] = useContext(apiToken);
+  
+  const checkLogin = () => {
+    if(!appToken){
+      navigate('/login');
+    }  
+  }
 
   useEffect(() => {
-    if(!getToken()){
-      navigate('/login');
-    }    
+    checkLogin();
   });  
-  useEffect(() => {      
-    showLoader(true);
-  },[]);  
 
-  const showLoader = (param) => {
-    setLoading(param);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }
-   
   const selectMenu = (currentNav) => {
     setCurrentNav(currentNav);
-    showLoader(true);
   }  
 
-  const basicToHome = (childdata) => {
-    setBasicSuccess(childdata);
-    if(basicSuccess){
-      setCurrentNav('yourresume');      
-    }
-  }
 
-  const templateToHome = (childdata) => {
-    setTemplateSuccess(childdata);
-    if(templateSuccess){
-      showLoader(true);
-      setCurrentNav('basicinfo');
-    }
-  }
-  
-  const renderNavigation = (param) => {    
+  const renderNavigation = (param) => { 
     switch(param) {
       case 'basicinfo':
-        return <Basicinfo basicToHome={basicToHome} showLoader={showLoader}/>
+        return <Basicinfo setCurrentNav={setCurrentNav} checkLogin={checkLogin} />
       case 'yourresume':
         return <Resume />
       default:
-        return <Template templateToHome={templateToHome}/>
+        return <Template setCurrentNav={setCurrentNav}/>
     }
   }
+
 
   return (
     <div>      
       <Container>
-      {loading ? (
-        <div className="loader-container">
-          <div className="spinner"></div>
-        </div>
-      ) : (
+      
         <Row>
           <Col md={3} sm={3}>
             <Accordion defaultActiveKey={['0']} alwaysOpen>
@@ -92,15 +65,15 @@ function Home() {
               </Accordion>
           </Col>
           <Col md={8} sm={8}>
-            {
-              renderNavigation(currentNav)
-            }
+          {
+            renderNavigation(currentNav)
+          }
           </Col>
         </Row>   
-      )}     
       </Container>
     </div>
   )
+  
 }
 
 export default Home

@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import axios from 'axios';
+import React, { useEffect, useRef, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Api from '../Api'; 
+import { userData } from '../App';
 
-//const Basicinfo = () => {
-function Basicinfo({basicToHome, showLoader}) {
-  const {http, user, token, logout} = Api();
+const Basicinfo = (props) => {
+  const {http} = Api();
+  const navigate = useNavigate();
   const inputRef = useRef([]);
   const errRef = useRef();  
+  const user = useContext(userData);
 
   const inputValues = {
     user_id:user.user_id,
@@ -19,55 +21,77 @@ function Basicinfo({basicToHome, showLoader}) {
     zipcode:'',
     profiledescription:'',
   }
-
   const [inputs, setInputs] = useState(inputValues);
-
+  
   const [errMsg, setErrMsg] = useState('');
-  const [basicSuccess, setBasicSuccess] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {   
+  useEffect(() => {
+    inputRef.current['fullname'].focus();
     fetchData(); 
-    showLoader(false);
   },[]);
-
+  
   const fetchData = () => {  
-    showLoader(true);
-    http.get('/basicinfo/',{params:{user_id: inputs.user_id}}).then((res)=>{     
-      setInputs({
-        user_id:inputs.user_id,
-        fullname:res.data.full_name,
-        phonenumber:res.data.phone_number,
-        emailid:res.data.email_id,
-        profiletitle:res.data.profile_title,
-        state:res.data.state,
-        city:res.data.city,
-        zipcode:res.data.zipcode,
-        profiledescription:res.data.profile_description,
+    if (localStorage.getItem("userData") === null) {
+      http.get('/basicinfo/',{params:{user_id: inputs.user_id}}).then((res)=>{     
+        setInputs({
+          user_id:inputs.user_id,
+          fullname:res.data.full_name,
+          phonenumber:res.data.phone_number,
+          emailid:res.data.email_id,
+          profiletitle:res.data.profile_title,
+          state:res.data.state,
+          city:res.data.city,
+          zipcode:res.data.zipcode,
+          profiledescription:res.data.profile_description,
+        });
+        const returnValues = {
+          user_id:user.user_id,
+          fullname:res.data.full_name,
+          phonenumber:res.data.phone_number,
+          emailid:res.data.email_id,
+          profiletitle:res.data.profile_title,
+          state:res.data.state,
+          city:res.data.city,
+          zipcode:res.data.zipcode,
+          profiledescription:res.data.profile_description,
+        }
+        localStorage.setItem('userData',JSON.stringify(returnValues));
+      }).catch((error) => {
+        if(error.response.status === 401){        
+          navigate('/login');  
+        }
       });
-      inputRef.current['fullname'].focus();
-      // inputRef.current['phonenumber'].value = inputs.phonenumber;
-      // inputRef.current['fullname'].value = inputs.fullname;
-      // inputRef.current['emailid'].value = inputs.emailid;
-      // inputRef.current['profiletitle'].value = inputs.profiletitle;
-      // inputRef.current['state'].value = inputs.state;
-      // inputRef.current['city'].value = inputs.city;
-      // inputRef.current['zipcode'].value = inputs.zipcode;
-      // inputRef.current['profiledescription'].value = inputs.profiledescription;
-    }).catch(error => {
-      if(error.response.status){
-        logout();
-      }
-    });
+    } else {
+      const sdata = localStorage.getItem('userData');
+      const sessionUserData = JSON.parse(sdata);
+      setInputs({
+        user_id:sessionUserData.user_id,
+        fullname:sessionUserData.fullname,
+        phonenumber:sessionUserData.phonenumber,
+        emailid:sessionUserData.emailid,
+        profiletitle:sessionUserData.profiletitle,
+        state:sessionUserData.state,
+        city:sessionUserData.city,
+        zipcode:sessionUserData.zipcode,
+        profiledescription:sessionUserData.profiledescription,
+      });
+    } 
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //setSuccess(true);
   }
 
-  const saveBasicInfo = () => {    
-    showLoader(true);
+  const handleInputChange = (e) => {
+    const {id, value} = e.target;
+    setInputs({
+      ...inputs,
+      [id]: value,
+    });
+  };
+
+  const saveBasicInfo = () => {
     http.post('/basicinfo',
       { 
         user_id:inputs.user_id,
@@ -80,24 +104,15 @@ function Basicinfo({basicToHome, showLoader}) {
         zipcode:inputs.zipcode,
         profile_description:inputs.profiledescription,
       }).then((res)=>{
-       // setBasicSuccess(true);
-        basicToHome(true);
-        showLoader(false);
-      }).catch(error => {
-        if(error.response.status){
-          logout();
+        localStorage.setItem('userData',JSON.stringify(inputs));
+        props.setCurrentNav('yourresume');
+      }).catch((error) => {
+        if(error.response.status === 401){        
+          navigate('/login');  
         }
       }); 
   }
 
-  const handleInputChange = (e) => {
-    const {id, value} = e.target;
-    setInputs({
-      ...inputs,
-      [id]: value,
-    });
-  };
-   
   return (
     <section>
       <p ref={errRef} className={errMsg ? "error" : ""} aria-live="assertive">
@@ -216,7 +231,7 @@ function Basicinfo({basicToHome, showLoader}) {
           </div>
         </div>
       </form>   
-    </section>
+   </section>
   )
 }
 
