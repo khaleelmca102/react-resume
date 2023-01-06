@@ -49,7 +49,9 @@ const Api = () => {
     baseURL: "http://localhost:8000/api",
     headers:{
         "content-type" : "application/json",
-        "Authorization" : `Bearer ${token}`
+        "Authorization" : `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+        withCredentials: true
     }
   });
 

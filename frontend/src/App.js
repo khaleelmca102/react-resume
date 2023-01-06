@@ -13,6 +13,8 @@ import Login from './components/Login';
 import Home from './components/Home';
 import { createContext, useState } from 'react';
 import Resume from './components/Resume';
+import Test from './components/Test';
+import Pdftest from './components/Pdftest';
 
 const apiToken = createContext();
 const userData = createContext();
@@ -33,6 +35,8 @@ function App() {
                 <Route path='/login' element={<Login />} />
                 <Route path='/logout' element={<Login />} />
                 <Route path='/resume' element={<Resume />} />
+                <Route path='/pdftest' element={<Pdftest />} />
+                <Route path='/test' element={<Test />} />
               </Routes>
           <Footer />
         </userData.Provider>

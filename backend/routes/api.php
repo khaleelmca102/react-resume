@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class,"login"]);
 Route::get('resume', [ResumePDF::class,"index"]);
+Route::get('test', [ResumePDF::class,"testing"]);
 
 Route::group([
     'middleware' => 'api'

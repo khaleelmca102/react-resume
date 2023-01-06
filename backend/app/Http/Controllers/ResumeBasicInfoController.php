@@ -17,7 +17,7 @@ class ResumeBasicInfoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api',['except'=>'testing']);
     }
 
     /**
@@ -117,6 +117,7 @@ class ResumeBasicInfoController extends Controller
         return response()->json('Success');
     }
 
+    
     /**
      * Remove the specified resource from storage.
      *
